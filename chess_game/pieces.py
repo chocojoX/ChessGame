@@ -1,5 +1,6 @@
 import numpy as np
 import string
+from utils import string2int_coordinates
 
 letters = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h']
 
@@ -170,6 +171,24 @@ class Pawn(ChessPiece):
 class Knight(ChessPiece):
     def __init__ (self, position, color):
         super().__init__(position, color)
+
+    def get_physically_legal_destinations(self, board):
+        coords = self.get_coordinates()
+        coords = string2int_coordinates(coords)
+        physically_legal_destinations = []
+        for i in [-2,-1,1,2]:
+            for j in [-2,-1,1,2]:
+                if np.abs(i) + np.abs(j) ==3:
+                    x = coords[0] + i
+                    y = coords[1] + j
+                    if 0<= x<8 and 0<=y<8:
+                        physically_legal_destinations.append(letters[x]+str(y+1))
+        return physically_legal_destinations
+
+
+    def get_trajectory(self, new_position):
+        # Knights have no trajectory, this function returns only the arrival square
+        return [new_position]
 
 
 class Bishop(ChessPiece):
