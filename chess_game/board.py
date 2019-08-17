@@ -67,6 +67,45 @@ class ChessBoard(object):
         pass
 
 
+    def move_piece(self, origin, dest, piece_type=None):
+        x,y = string2int_coordinates(origin)
+        x_dest, y_dest = string2int_coordinates(dest)
+        piece = self.board[x][y]
+        assert piece is not None, f"No piece is present on square {origin}"
+        # TODO: Need to handle the following cases :
+        # 1.0 : Basic movements of the pieces
+        # 1.1 : Captures
+        # 2 : Castling (short and long)
+        # 3 : En-passant
+        # 4 : Pawn promotion
+        assert piece.is_move_legal(dest, self), "Move is not legal."
+        self.board[x][y] = None
+        self.board[x_dest][y_dest] = piece
+        piece.force_update_position(dest)
+        return True
+
+
+    def get_piece_on_square(self, coordinates):
+        x, y = string2int_coordinates(coordinates)
+        return self.board[x][y]
+
+
+    def is_square_free(self, coordinates):
+        return self.get_piece_on_square(coordinates) is None
+
+
+    def get_color_of_piece_on_square(self, coordinates):
+        assert not self.is_square_free(coordinates), f"Color of the piece is asked but the square {coordinates} is free."
+        piece = self.get_piece_on_square(coordinates)
+        return piece.get_color()
+
+
 if __name__=="__main__":
     board = ChessBoard()
+    board.move_piece('e2', 'e4')
+    print(board.is_square_free('e2'))
+    print(board.get_color_of_piece_on_square('e4'))
+    board.move_piece('e4', 'e5')
+    board.move_piece('e5', 'e6')
+    # board.move_piece('e7', 'e5')
     pass
