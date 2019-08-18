@@ -196,10 +196,120 @@ class Bishop(ChessPiece):
         super().__init__(position, color)
 
 
+    def get_physically_legal_destinations(self, board):
+        coords = self.get_coordinates()
+        coords = string2int_coordinates(coords)
+        physically_legal_destinations = []
+
+        # Towards lower left-hqnd corner
+        for i in range(1, coords[0]+1):
+            x = coords[0] - i
+            y = coords[1] - i
+            if y<0:
+                break
+            else:
+                physically_legal_destinations.append(letters[x]+str(y+1))
+        # Towards lower right-hand corner
+        for i in range(1, 8-coords[0]):
+            x = coords[0] + i
+            y = coords[1] - i
+            if y<0:
+                break
+            else:
+                physically_legal_destinations.append(letters[x]+str(y+1))
+        # Towards top left-hand corner
+        for i in range(1, coords[0]+1):
+            x = coords[0] - i
+            y = coords[1] + i
+            if y>7:
+                break
+            else:
+                physically_legal_destinations.append(letters[x]+str(y+1))
+        # Towards top right-hand corner
+        for i in range(1, 8-coords[0]):
+            x = coords[0] + i
+            y = coords[1] + i
+            if y>7:
+                break
+            else:
+                physically_legal_destinations.append(letters[x]+str(y+1))
+        return physically_legal_destinations
+
+
+    def get_trajectory(self, new_position):
+        coords = self.get_coordinates()
+        coords = string2int_coordinates(coords)
+        new_coords = string2int_coordinates(new_position)
+        sign_x_direction = 1 if new_coords[0]>coords[0] else -1
+        sign_y_direction = 1 if new_coords[1]>coords[1] else -1
+
+        new_x = coords[0]
+        new_y = coords[1]
+        trajectory = []
+        while new_x != new_coords[0]:
+            new_x += sign_x_direction
+            new_y += sign_y_direction
+            square = letters[new_x]+str(new_y + 1)
+            trajectory.append(square)
+        return trajectory
+
+
 class Rook(ChessPiece):
     def __init__ (self, position, color):
         super().__init__(position, color)
 
+    def get_physically_legal_destinations(self, board):
+        coords = self.get_coordinates()
+        coords = string2int_coordinates(coords)
+        physically_legal_destinations = []
+
+        # Towards left side of the boqrd
+        for i in range(1, coords[0]+1):
+            x = coords[0] - i
+            y = coords[1]
+            physically_legal_destinations.append(letters[x]+str(y+1))
+        # Towards right side of the board
+        for i in range(1, 8-coords[0]):
+            x = coords[0] + i
+            y = coords[1]
+            physically_legal_destinations.append(letters[x]+str(y+1))
+
+        # Towards top of the boqrd
+        for i in range(1, 8-coords[1]):
+            x = coords[0]
+            y = coords[1] + i
+            physically_legal_destinations.append(letters[x]+str(y+1))
+        # Towards bottom of the board
+        for i in range(1, coords[1]+1):
+            x = coords[0]
+            y = coords[1] - i
+            physically_legal_destinations.append(letters[x]+str(y+1))
+
+        return physically_legal_destinations
+
+
+    def get_trajectory(self, new_position):
+        coords = self.get_coordinates()
+        coords = string2int_coordinates(coords)
+        new_coords = string2int_coordinates(new_position)
+        if new_coords[0]==coords[0]:
+            sign_x_direction = 0
+        else:
+            sign_x_direction = 1 if new_coords[0]>coords[0] else -1
+        if new_coords[1]==coords[1]:
+            sign_y_direction = 0
+        else:
+            sign_y_direction = 1 if new_coords[1]>coords[1] else -1
+
+        new_x = coords[0]
+        new_y = coords[1]
+        trajectory = []
+        while new_x != new_coords[0] or new_y != new_coords[1]:
+            new_x += sign_x_direction
+            new_y += sign_y_direction
+            square = letters[new_x]+str(new_y + 1)
+            trajectory.append(square)
+        return trajectory
 
 class Queen(ChessPiece):
     def __init__ (self, position, color):
