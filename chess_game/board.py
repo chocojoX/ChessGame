@@ -106,6 +106,19 @@ if __name__=="__main__":
     print(board.is_square_free('e2'))
     print(board.get_color_of_piece_on_square('e4'))
     board.move_piece('e4', 'e5')
-    board.move_piece('e5', 'e6')
+    board.move_piece('b1', 'c3')
+    board.move_piece('a2', 'a4')
+
+    board.move_piece('a1', 'b1')
+    board.move_piece('b1', 'a1')
+    board.move_piece('a1', 'a3')
+
+    # board.move_piece('a3', 'a4')
+    board.move_piece('a3', 'a5')
+
+
+
+
+    # board.move_piece('e5', 'e6')
     # board.move_piece('e7', 'e5')
     pass
